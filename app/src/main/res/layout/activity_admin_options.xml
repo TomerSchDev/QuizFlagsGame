@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin Options"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/buttonViewLocalResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Local Saved Results"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/buttonViewServerResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Server Results"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/buttonAddQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Question"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/buttonEditQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Existing Question"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/buttonDeleteQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Question"
+        android:layout_marginBottom="8dp" />
+
+</LinearLayout>
