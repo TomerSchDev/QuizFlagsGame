@@ -1,21 +1,25 @@
-package com.TomerSch.quizgame;
+package com.TomerSch.quizgame.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.TomerSch.quizgame.gameLogic.GameManager;
+import com.TomerSch.quizgame.gameLogic.Question;
+import com.TomerSch.quizgame.R;
+
 public class QuizActivity extends AppCompatActivity {
 
     private GameManager gm;
     private ImageView flagImageView;
     private EditText answerEditText;
+    private Button buttonReturnMain;
     private static final String TAG = "QuizActivity";
 
     @Override
@@ -28,7 +32,7 @@ public class QuizActivity extends AppCompatActivity {
         flagImageView = findViewById(R.id.flagImageView);
         answerEditText = findViewById(R.id.answerEditText);
         Button submitButton = findViewById(R.id.submitButton);
-
+        buttonReturnMain = findViewById(R.id.buttonReturnMain);
         loadQuestion();
 
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +64,14 @@ public class QuizActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(QuizActivity.this, "Please enter an answer", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        buttonReturnMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuizActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish(); // Close this activity
             }
         });
     }

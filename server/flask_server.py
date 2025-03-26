@@ -43,18 +43,22 @@ def submit_result():
     if request.is_json:
         try:
             data = request.get_json()
-            user = data.get('user')
-            timestamp_score_str = data.get('timestamp_score')
+            user = data.get('userId')
+            timestamp_score_str = data.get('timestamp')
             score = data.get('score')
-            total_questions = data.get('total_questions')
-
-            if not user or not timestamp_score_str:
-                return jsonify({"error": "Missing user or timestamp_score"}), 400
-
-            try:
-                timestamp_score = datetime.datetime.fromisoformat(timestamp_score_str.replace('Z', '+00:00'))
-            except ValueError:
-                return jsonify({"error": "Invalid timestamp_score format. Use ISO format (e.g., '2025-03-26T17:20:00+00:00')}), 400"})
+            total_questions = data.get('totalQuestions')
+            if not any([user, timestamp_score_str, score, total_questions]):
+                return jsonify({"error": "Missing required fields"}), 400
+            print(
+                f"Received and saved quiz result - User: {user}, Score: {score}, Total Questions: {total_questions}, Timestamp Score: {timestamp_score_str}")
+            if timestamp_score_str == "N/A":
+                print("Timestamp is N/A, using current time.")
+                timestamp_score = datetime.datetime.now()
+            else:
+                try:
+                    timestamp_score = datetime.datetime.fromisoformat(timestamp_score_str.replace('Z', '+00:00'))
+                except ValueError:
+                    return jsonify({"error": "Invalid timestamp_score format. Use ISO format (e.g., '2025-03-26T17:20:00+00:00')}), 400"})
 
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -70,5 +74,43 @@ def submit_result():
     else:
         return jsonify({"error": "Request must be JSON"}), 400
 
+@app.route('/get_results/<str:user_id>', methods=['GET'])
+def get_results_per_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM results WHERE user ?", (user_id,))
+    result = cursor.fetchone()
+    close_db_connection(conn)
+
+    if result:
+        result_dict = {
+            'id': result['id'],
+            'user': result['user'],
+            'timestamp_score': result['timestamp_score'],
+            'timestamp_inserted': result['timestamp_inserted'],
+            'score': result['score'],
+            'total_questions': result['total_questions']
+        }
+        return jsonify(result_dict), 200
+    else:
+        return jsonify({"message": "Result not found"}), 404
+@app.route('/get_results', methods=['GET'])
+def get_results():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM results")
+    results = cursor.fetchall()
+    close_db_connection(conn)
+
+    results_list = [ {
+            'id': result['id'],
+            'user': result['user'],
+            'timestamp_score': result['timestamp_score'],
+            'timestamp_inserted': result['timestamp_inserted'],
+            'score': result['score'],
+            'total_questions': result['total_questions']
+        } for result in results]
+
+    return jsonify(results_list), 200
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
